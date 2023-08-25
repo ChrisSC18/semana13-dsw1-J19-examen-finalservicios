@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -22,18 +21,11 @@ public class HomeController {
 		return "index";
 	}
 
-	@GetMapping(path = "/api/bandas/{id}/formacion")
-	public @ResponseBody List<Map <String, Object>> formacion(@PathVariable Integer id){
-		String sql = "SELECT integrante.id as ID, musico.nombre as MUSICO, instrumento.nombre as INSTRUMENTO FROM integrante JOIN musico ON integrante.id_musico=musico.id JOIN instrumento ON integrante.id_instrumento=instrumento.id WHERE integrante.id_banda = ?";
-		List<Map <String, Object>> queryResult = jdbcTemplate.queryForList(sql, id);
+	@GetMapping(value="/api/productos/formacion")
+	public @ResponseBody List<Map<String,Object>> formacion(){
+		String sql = "SELECT producto.id as ID, producto.nombre as PRODUCTO, categoria.NOMBRE as CATEGORIA, producto.precio as PRECIO FROM producto JOIN categoria on categoria.id=producto.id_categoria";
+		List<Map <String, Object>> queryResult = jdbcTemplate.queryForList(sql);
 		return queryResult;
 	}
-
-	/**
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
 
 }

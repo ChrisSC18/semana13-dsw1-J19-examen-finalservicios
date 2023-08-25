@@ -5,10 +5,11 @@ const {Link} = require('react-router-dom');
 class HomePage extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { instrumentos: [], musicos: [], bandas: [] };
+		this.state = { productos: [], musicos: [], bandas: [] };
 	}
 	componentDidMount() {
 
+		{/*
 		client({ method: 'GET', path: '/api/instrumentos' }).done(response => {
 			this.setState({ instrumentos: response.entity._embedded.instrumentos });
 		});
@@ -19,6 +20,10 @@ class HomePage extends React.Component {
 
 		client({ method: 'GET', path: '/api/bandas' }).done(response => {
 			this.setState({ bandas: response.entity._embedded.bandas });
+		});*/}
+
+		client({ method: 'GET', path: '/api/productos/formacion' }).done(response => {
+			this.setState({ productos: response.entity });
 		});
 
 	}
@@ -28,20 +33,10 @@ class HomePage extends React.Component {
 				<h1>Semana 13 App</h1>
 
 				<div style={  {"width": "100%", "display": "flex"}   }>
-					<div style={{"width": "calc(100% / 3)"}}>
-						<Titulo entidad="Intrumentos" emoji="🎸" />
-						<InstrumentoList instrumentos={this.state.instrumentos} />
-						<Link to="/nuevo-instrumento">Nuevo Instrumento</Link>
-					</div>
-					<div style={{"width": "calc(100% / 3)"}}>
-						<Titulo entidad="Musicos" emoji="🎶" />
-						<MusicoList musicos={this.state.musicos} />
-						<Link to="/nuevo-musico">Nuevo Músico</Link>
-					</div>
-					<div style={{"width": "calc(100% / 3)"}}>
-						<Titulo entidad="Bandas" emoji="👩🏼‍🎤" />
-						<BandaList bandas={this.state.bandas} />
-						<Link to="/nueva-banda">Nueva Banda</Link>
+					<div style={{"width": "calc(100%)"}}>
+						<Titulo entidad="Productos" emoji="🎸" />
+						<ProductoList productos={this.state.productos} />
+						<Link to={"/save"}>Agregar Producto</Link> 
 					</div>
 				</div>
 
@@ -60,6 +55,44 @@ const Titulo = (props) => {
 			Lista completa de {props.entidad.toLowerCase()}
 		</>
 	)
+}
+
+class ProductoList extends React.Component {
+	render() {
+		const products = this.props.productos.map(det =>
+			<Producto key={det.ID} producto={det} />
+		);
+		
+		return (
+		
+			<table border="1">
+				<tbody>
+					<tr>
+						<th>ID</th>
+						<th>NOMBRE</th>
+						<th>CATEGORIA</th>
+						<th>PRECIO</th>
+					</tr>
+					{products}
+				</tbody>
+			</table>
+		
+		)
+	}
+}
+
+
+class Producto extends React.Component {
+	render() {
+		return (
+			<tr>
+				<td>{this.props.producto.ID}</td>
+				<td>{this.props.producto.PRODUCTO}</td>
+				<td>{this.props.producto.CATEGORIA}</td>
+				<td>{this.props.producto.PRECIO}</td>
+			</tr>
+		)
+	}
 }
 
 

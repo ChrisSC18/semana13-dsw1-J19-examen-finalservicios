@@ -40847,6 +40847,7 @@ var VerMusicoPage = __webpack_require__(/*! ./pages/ver-musico */ "./src/main/js
 var EditarInstrumentoPage = __webpack_require__(/*! ./pages/editar-instrumento */ "./src/main/js/pages/editar-instrumento.js");
 var VerBandaPage = __webpack_require__(/*! ./pages/ver-banda */ "./src/main/js/pages/ver-banda.js");
 var NuevoIntegrantePage = __webpack_require__(/*! ./pages/nuevo-integrante */ "./src/main/js/pages/nuevo-integrante.js");
+var SaveProduct = __webpack_require__(/*! ./pages/SaveProduct */ "./src/main/js/pages/SaveProduct.js");
 var router = createBrowserRouter([{
   path: '/',
   element: /*#__PURE__*/React.createElement(HomePage, null)
@@ -40871,6 +40872,9 @@ var router = createBrowserRouter([{
 }, {
   path: '/ver-banda/:id/nuevo-integrante',
   element: /*#__PURE__*/React.createElement(NuevoIntegrantePage, null)
+}, {
+  path: '/save',
+  element: /*#__PURE__*/React.createElement(SaveProduct, null)
 }]);
 ReactDOM.render( /*#__PURE__*/React.createElement(React.StrictMode, null, /*#__PURE__*/React.createElement(RouterProvider, {
   router: router
@@ -40904,6 +40908,107 @@ module.exports = rest.wrap(mime, {
     'Accept': 'application/hal+json'
   }
 });
+
+/***/ }),
+
+/***/ "./src/main/js/pages/SaveProduct.js":
+/*!******************************************!*\
+  !*** ./src/main/js/pages/SaveProduct.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var _require = __webpack_require__(/*! react */ "./node_modules/react/index.js"),
+  useState = _require.useState,
+  useEffect = _require.useEffect;
+var client = __webpack_require__(/*! ../client.js */ "./src/main/js/client.js");
+var SaveProduct = function SaveProduct() {
+  var _useState = useState(''),
+    _useState2 = _slicedToArray(_useState, 2),
+    idCategoria = _useState2[0],
+    setIdCategoria = _useState2[1];
+  var _useState3 = useState([]),
+    _useState4 = _slicedToArray(_useState3, 2),
+    categorias = _useState4[0],
+    setCategorias = _useState4[1];
+  var _useState5 = useState(""),
+    _useState6 = _slicedToArray(_useState5, 2),
+    nombre = _useState6[0],
+    setNombre = _useState6[1];
+  var _useState7 = useState(""),
+    _useState8 = _slicedToArray(_useState7, 2),
+    precio = _useState8[0],
+    setPrecio = _useState8[1];
+  useEffect(function () {
+    client({
+      method: 'GET',
+      path: '/api/categorias'
+    }).done(function (response) {
+      setCategorias(response.entity._embedded.categorias);
+    });
+  }, []);
+  var handleSubmit = function handleSubmit(evento) {
+    evento.preventDefault();
+    client({
+      method: 'POST',
+      path: '/api/productos',
+      entity: {
+        categoria: 'http://localhost:8080/api/categorias/' + idCategoria,
+        nombre: nombre,
+        precio: precio
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).done(function () {
+      window.location = '/';
+    });
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "Agregar"), /*#__PURE__*/React.createElement("form", {
+    onSubmit: handleSubmit
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "categoria"
+  }, "Categoria "), /*#__PURE__*/React.createElement("select", {
+    name: "categoria",
+    id: "categoria",
+    onChange: function onChange(e) {
+      setIdCategoria(e.target.value);
+    }
+  }, categorias.map(function (cat) {
+    var value = cat._links.self.href.split('/').slice(-1);
+    return /*#__PURE__*/React.createElement("option", {
+      key: value,
+      value: value
+    }, "[", cat.nombre, "]");
+  })), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", null, "Nombre "), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    name: "nombre",
+    id: "nombre",
+    value: nombre,
+    onChange: function onChange(e) {
+      setNombre(e.target.value);
+    }
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", null, "Precio "), /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    name: "precio",
+    id: "precio",
+    value: precio,
+    onChange: function onChange(e) {
+      setPrecio(e.target.value);
+    }
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
+    type: "submit",
+    value: "Guardar"
+  })));
+};
+module.exports = SaveProduct;
 
 /***/ }),
 
@@ -41035,7 +41140,7 @@ var HomePage = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, HomePage);
     _this = _super.call(this, props);
     _this.state = {
-      instrumentos: [],
+      productos: [],
       musicos: [],
       bandas: []
     };
@@ -41045,28 +41150,22 @@ var HomePage = /*#__PURE__*/function (_React$Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
+      {/*
+       client({ method: 'GET', path: '/api/instrumentos' }).done(response => {
+       this.setState({ instrumentos: response.entity._embedded.instrumentos });
+       });
+       client({ method: 'GET', path: '/api/musicos' }).done(response => {
+       this.setState({ musicos: response.entity._embedded.musicos });
+       });
+       client({ method: 'GET', path: '/api/bandas' }).done(response => {
+       this.setState({ bandas: response.entity._embedded.bandas });
+       });*/}
       client({
         method: 'GET',
-        path: '/api/instrumentos'
+        path: '/api/productos/formacion'
       }).done(function (response) {
         _this2.setState({
-          instrumentos: response.entity._embedded.instrumentos
-        });
-      });
-      client({
-        method: 'GET',
-        path: '/api/musicos'
-      }).done(function (response) {
-        _this2.setState({
-          musicos: response.entity._embedded.musicos
-        });
-      });
-      client({
-        method: 'GET',
-        path: '/api/bandas'
-      }).done(function (response) {
-        _this2.setState({
-          bandas: response.entity._embedded.bandas
+          productos: response.entity
         });
       });
     }
@@ -41080,38 +41179,16 @@ var HomePage = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
-          "width": "calc(100% / 3)"
+          "width": "calc(100%)"
         }
       }, /*#__PURE__*/React.createElement(Titulo, {
-        entidad: "Intrumentos",
+        entidad: "Productos",
         emoji: "\uD83C\uDFB8"
-      }), /*#__PURE__*/React.createElement(InstrumentoList, {
-        instrumentos: this.state.instrumentos
+      }), /*#__PURE__*/React.createElement(ProductoList, {
+        productos: this.state.productos
       }), /*#__PURE__*/React.createElement(Link, {
-        to: "/nuevo-instrumento"
-      }, "Nuevo Instrumento")), /*#__PURE__*/React.createElement("div", {
-        style: {
-          "width": "calc(100% / 3)"
-        }
-      }, /*#__PURE__*/React.createElement(Titulo, {
-        entidad: "Musicos",
-        emoji: "\uD83C\uDFB6"
-      }), /*#__PURE__*/React.createElement(MusicoList, {
-        musicos: this.state.musicos
-      }), /*#__PURE__*/React.createElement(Link, {
-        to: "/nuevo-musico"
-      }, "Nuevo M\xFAsico")), /*#__PURE__*/React.createElement("div", {
-        style: {
-          "width": "calc(100% / 3)"
-        }
-      }, /*#__PURE__*/React.createElement(Titulo, {
-        entidad: "Bandas",
-        emoji: "\uD83D\uDC69\uD83C\uDFFC\u200D\uD83C\uDFA4"
-      }), /*#__PURE__*/React.createElement(BandaList, {
-        bandas: this.state.bandas
-      }), /*#__PURE__*/React.createElement(Link, {
-        to: "/nueva-banda"
-      }, "Nueva Banda"))));
+        to: "/save"
+      }, "Agregar Producto"))));
     }
   }]);
   return HomePage;
@@ -41119,12 +41196,50 @@ var HomePage = /*#__PURE__*/function (_React$Component) {
 var Titulo = function Titulo(props) {
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement("h2", null, props.emoji, " - ", props.entidad), /*#__PURE__*/React.createElement("hr", null), "Lista completa de ", props.entidad.toLowerCase());
 };
-var InstrumentoList = /*#__PURE__*/function (_React$Component2) {
-  _inherits(InstrumentoList, _React$Component2);
-  var _super2 = _createSuper(InstrumentoList);
+var ProductoList = /*#__PURE__*/function (_React$Component2) {
+  _inherits(ProductoList, _React$Component2);
+  var _super2 = _createSuper(ProductoList);
+  function ProductoList() {
+    _classCallCheck(this, ProductoList);
+    return _super2.apply(this, arguments);
+  }
+  _createClass(ProductoList, [{
+    key: "render",
+    value: function render() {
+      var products = this.props.productos.map(function (det) {
+        return /*#__PURE__*/React.createElement(Producto, {
+          key: det.ID,
+          producto: det
+        });
+      });
+      return /*#__PURE__*/React.createElement("table", {
+        border: "1"
+      }, /*#__PURE__*/React.createElement("tbody", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "ID"), /*#__PURE__*/React.createElement("th", null, "NOMBRE"), /*#__PURE__*/React.createElement("th", null, "CATEGORIA"), /*#__PURE__*/React.createElement("th", null, "PRECIO")), products));
+    }
+  }]);
+  return ProductoList;
+}(React.Component);
+var Producto = /*#__PURE__*/function (_React$Component3) {
+  _inherits(Producto, _React$Component3);
+  var _super3 = _createSuper(Producto);
+  function Producto() {
+    _classCallCheck(this, Producto);
+    return _super3.apply(this, arguments);
+  }
+  _createClass(Producto, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, this.props.producto.ID), /*#__PURE__*/React.createElement("td", null, this.props.producto.PRODUCTO), /*#__PURE__*/React.createElement("td", null, this.props.producto.CATEGORIA), /*#__PURE__*/React.createElement("td", null, this.props.producto.PRECIO));
+    }
+  }]);
+  return Producto;
+}(React.Component);
+var InstrumentoList = /*#__PURE__*/function (_React$Component4) {
+  _inherits(InstrumentoList, _React$Component4);
+  var _super4 = _createSuper(InstrumentoList);
   function InstrumentoList() {
     _classCallCheck(this, InstrumentoList);
-    return _super2.apply(this, arguments);
+    return _super4.apply(this, arguments);
   }
   _createClass(InstrumentoList, [{
     key: "render",
@@ -41142,12 +41257,12 @@ var InstrumentoList = /*#__PURE__*/function (_React$Component2) {
   }]);
   return InstrumentoList;
 }(React.Component);
-var MusicoList = /*#__PURE__*/function (_React$Component3) {
-  _inherits(MusicoList, _React$Component3);
-  var _super3 = _createSuper(MusicoList);
+var MusicoList = /*#__PURE__*/function (_React$Component5) {
+  _inherits(MusicoList, _React$Component5);
+  var _super5 = _createSuper(MusicoList);
   function MusicoList() {
     _classCallCheck(this, MusicoList);
-    return _super3.apply(this, arguments);
+    return _super5.apply(this, arguments);
   }
   _createClass(MusicoList, [{
     key: "render",
@@ -41165,12 +41280,12 @@ var MusicoList = /*#__PURE__*/function (_React$Component3) {
   }]);
   return MusicoList;
 }(React.Component);
-var BandaList = /*#__PURE__*/function (_React$Component4) {
-  _inherits(BandaList, _React$Component4);
-  var _super4 = _createSuper(BandaList);
+var BandaList = /*#__PURE__*/function (_React$Component6) {
+  _inherits(BandaList, _React$Component6);
+  var _super6 = _createSuper(BandaList);
   function BandaList() {
     _classCallCheck(this, BandaList);
-    return _super4.apply(this, arguments);
+    return _super6.apply(this, arguments);
   }
   _createClass(BandaList, [{
     key: "render",
@@ -41188,12 +41303,12 @@ var BandaList = /*#__PURE__*/function (_React$Component4) {
   }]);
   return BandaList;
 }(React.Component);
-var Instrumento = /*#__PURE__*/function (_React$Component5) {
-  _inherits(Instrumento, _React$Component5);
-  var _super5 = _createSuper(Instrumento);
+var Instrumento = /*#__PURE__*/function (_React$Component7) {
+  _inherits(Instrumento, _React$Component7);
+  var _super7 = _createSuper(Instrumento);
   function Instrumento() {
     _classCallCheck(this, Instrumento);
-    return _super5.apply(this, arguments);
+    return _super7.apply(this, arguments);
   }
   _createClass(Instrumento, [{
     key: "render",
@@ -41208,12 +41323,12 @@ var Instrumento = /*#__PURE__*/function (_React$Component5) {
   }]);
   return Instrumento;
 }(React.Component);
-var Musico = /*#__PURE__*/function (_React$Component6) {
-  _inherits(Musico, _React$Component6);
-  var _super6 = _createSuper(Musico);
+var Musico = /*#__PURE__*/function (_React$Component8) {
+  _inherits(Musico, _React$Component8);
+  var _super8 = _createSuper(Musico);
   function Musico() {
     _classCallCheck(this, Musico);
-    return _super6.apply(this, arguments);
+    return _super8.apply(this, arguments);
   }
   _createClass(Musico, [{
     key: "render",
@@ -41226,12 +41341,12 @@ var Musico = /*#__PURE__*/function (_React$Component6) {
   }]);
   return Musico;
 }(React.Component);
-var Banda = /*#__PURE__*/function (_React$Component7) {
-  _inherits(Banda, _React$Component7);
-  var _super7 = _createSuper(Banda);
+var Banda = /*#__PURE__*/function (_React$Component9) {
+  _inherits(Banda, _React$Component9);
+  var _super9 = _createSuper(Banda);
   function Banda() {
     _classCallCheck(this, Banda);
-    return _super7.apply(this, arguments);
+    return _super9.apply(this, arguments);
   }
   _createClass(Banda, [{
     key: "render",

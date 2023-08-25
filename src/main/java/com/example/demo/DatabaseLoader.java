@@ -7,48 +7,33 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatabaseLoader implements CommandLineRunner {
 
-	private final InstrumentoRepository repositoryI;
-	private final MusicoRepository repositoryM;
-	private final BandaRepository repositoryB;
-	private final IntegranteRepository repositoryN;
+	private final ProductoRepository productoRepository;
+	private final CategoriaRepository categoriaRepository;
 
 	@Autowired
 	public DatabaseLoader(
-		InstrumentoRepository repositoryI,
-		MusicoRepository repositoryM,
-		BandaRepository repositoryB,
-		IntegranteRepository repositoryN
+		ProductoRepository productoRepository,
+		CategoriaRepository categoriaRepository
 		) {
-		this.repositoryI = repositoryI;
-		this.repositoryM = repositoryM;
-		this.repositoryB = repositoryB;
-		this.repositoryN = repositoryN;
+		this.productoRepository=productoRepository;
+		this.categoriaRepository=categoriaRepository;
 	}
 
 	@Override
 	public void run(String... strings) throws Exception {
-
-		this.repositoryI.save(new Instrumento("Guitarra", "Cuerda", "de madera, con caja de resonancia, 6 cuerdas templadas"));
-		this.repositoryI.save(new Instrumento("Ukelele","Cuerda","de madera, con caja de resonancia pequeña, 4 cuerdas templadas"));
-		this.repositoryI.save(new Instrumento("Melódica","Viento","teclado pequeño de 2 octavas, sonorizado por soplido"));
-		Instrumento iVoz = new Instrumento("Voz","Viento",".");
-		this.repositoryI.save(iVoz);
-		Instrumento iGuitarraElectrica = new Instrumento("Guitarra Electrica","Electrónico", ".");
-		this.repositoryI.save(iGuitarraElectrica);
-		this.repositoryI.save(new Instrumento("Batería","Percusión","."));
-
-		this.repositoryM.save(new Musico("Daniel F"));
-		Musico mFreddy = new Musico("Freddy");
-		this.repositoryM.save(mFreddy);
-		Musico mBrian = new Musico("Brian");
-		this.repositoryM.save(mBrian);
-
-		Banda bQueen = new Banda("Queen");
-		this.repositoryB.save(bQueen);
-
-		this.repositoryN.save(new Integrante(bQueen, mFreddy, iVoz));
-		this.repositoryN.save(new Integrante(bQueen, mBrian, iGuitarraElectrica));
-
+		
+		Categoria categoria1=new Categoria("Menestras");
+		Categoria categoria2=new Categoria("Dulces");
+		this.categoriaRepository.save(categoria1);
+		this.categoriaRepository.save(categoria2);
+		Producto p0=new Producto("Chupetin Red", 1.50f, categoria2);
+		Producto p1=new Producto("Lentajas", 1.80f, categoria1);
+		Producto p2=new Producto("Garbanzos", 2.00f, categoria1);
+		Producto p3=new Producto("Frejol", 7.50f, categoria1);
+		this.productoRepository.save(p0);
+		this.productoRepository.save(p1);
+		this.productoRepository.save(p2);
+		this.productoRepository.save(p3);
 
 	}
 }
